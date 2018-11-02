@@ -1,9 +1,9 @@
-import tkinter.messagebox
-import requests
-from lxml import etree
-from PIL import Image,ImageTk
 import tkinter
 from tkinter import ttk
+from PIL import Image,ImageTk
+import requests
+from lxml import etree
+import tkinter.messagebox
 
 def go(*args):
 	name = comboxlist.get()
@@ -21,8 +21,7 @@ def go(*args):
 		return 'zql.ttf'
 	elif name == "可爱签":
 		return 'yqk.ttf'
- 
-
+		
 def download():
 	url = 'http://www.uustv.com/'
 	name = entry.get()
@@ -43,27 +42,34 @@ def download():
 		response = requests.get(imageurl).content
 		with open('name.jpg','wb') as f:
 			f.write(response)
-		im = Image.open('name.jpg')
-		bm = ImageTk.PhotoImage(im)
-		
-		label2 = ttk.Label(root,image=bm)
-		label2.bm = bm
-		label2.grid(row=2,column=3,columnspan=3)
-		
+		bm = ImageTk.PhotoImage(Image.open('name.jpg'))
+		return bm
+def change_photo():
+	bm = download()
+	second_label.configure(image = bm)
+	second_label.image = bm
+
 root = tkinter.Tk()
-root.title('interesting program')
-root.geometry('900x400')
+root.geometry('600x300')
+root.title('设计你的签名!')
 
+first_label = ttk.Label(root,text="设计签名").pack(side=tkinter.TOP)
 
-l = ttk.Label(root,text='设计签名').grid(row=0,column=0)
-
-entry = ttk.Entry(root,width=13)
-entry.grid(row=1,column=0)
-comboxlist = ttk.Combobox(root,width=5)
+first_frm = ttk.Frame(root)
+entry = ttk.Entry(first_frm,width=13)
+entry.pack(side=tkinter.LEFT)
+comboxlist = ttk.Combobox(first_frm,width=6)
 comboxlist['values'] = ('个性签','连笔签','潇洒签','草体签','合文签','商务签','可爱签')
 comboxlist.current(0)
-comboxlist.bind("<<ComboxonSelected>>",go)
-comboxlist.grid(row=1,column=1)
-ttk.Button(root,text='获取签名',command = download).grid(row=1,column=2)
+comboxlist.bind('<<ComboxonSelected>>',go)
+comboxlist.pack(side=tkinter.LEFT)
+
+first_button = ttk.Button(first_frm,text='设计签名',width=10,command=change_photo).pack(side=tkinter.RIGHT)
+
+first_frm.pack()
+
+second_label = ttk.Label(root)
+second_label.pack()
 
 root.mainloop()
+
